@@ -13,16 +13,16 @@ const NotesService = {
         });
     },
     getById(knex, id) {
-        return knex.from('notes').select('*').where('id', id).first();
+        return knex.from('notes').select('*').where('noteid', id).first();
     },
     deleteNote(knex, id) {
         return knex('notes')
-          .where({ id })
+          .where('noteid', id)
           .delete();
     },
     updateNote(knex, id, newNotesFields) {
         return knex('notes')
-          .where({ id })
+          .where('noteid', id)
           .update(newNotesFields);
     },
 

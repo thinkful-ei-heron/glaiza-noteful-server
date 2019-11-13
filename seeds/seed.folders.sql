@@ -1,4 +1,4 @@
-INSERT INTO folders (name, date_created)
+INSERT INTO folders (folder_title)
 VALUES
     ('Important'),
     ('Super'),
