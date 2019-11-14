@@ -84,6 +84,9 @@ notesRouter
       .then( notes => {
         res.status(204).json(notes);
       })
+      // .then( ()  => {
+      //   res.status(204).end();
+      // })
       .catch(next);
   })
   .patch(jsonParser, (req, res, next) => {

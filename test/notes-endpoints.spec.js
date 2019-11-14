@@ -23,7 +23,7 @@ describe('Notes Endpoints', function() {
   before('clean the table', () => db.raw('TRUNCATE notes, folders RESTART IDENTITY CASCADE'));
   afterEach('cleanup', () => db.raw('TRUNCATE notes, folders RESTART IDENTITY CASCADE'));
 
-    describe(`GET /api/notes`, () => {
+  describe(`GET /api/notes`, () => {
         context(`Given no notes`, () => {
             it(`responds with 200 and an empty list`, () => {
               return supertest(app)
@@ -79,9 +79,9 @@ describe('Notes Endpoints', function() {
               });
           });
         });
-    }); //end of GET /api/notes
+  }); //end of GET /api/notes
 
-    describe(`GET /api/notes/:noteid`, () => {
+  describe(`GET /api/notes/:noteid`, () => {
       context(`Given no notes`, () => {
         it(`responds with 404`, () => {
           const noteid = 123456;
@@ -89,7 +89,6 @@ describe('Notes Endpoints', function() {
             .get(`/api/notes/${noteid}`)
             .expect(404, { error: { message: `Note doesn't exist` } });
         });
-      });
 
       context('Given there are notes in the database', () => {
           const testFolders = makeFoldersArray();
@@ -216,49 +215,50 @@ describe('Notes Endpoints', function() {
       // });
     }); //end of POST
 
-    //DELETE
-    describe(`DELETE /api/notes/:noteid`, () => {
-      context(`Given no notes`, () => {
-        it(`responds with 404`, () => {
-          const noteid = 123456;
-          return supertest(app)
-            .delete(`/api/notes/${noteid}`)
-            .expect(404, { error: { message: `Note doesn't exist` } });
-        });
-      });
-  
-      context('Given there are notes in the database', () => {
-        const testFolders = makeFoldersArray();
-        const testNotes = makeNotesArray();
-  
-        beforeEach('insert folders and notes', () => {
-            return db
-                .into('folders')
-                .insert(testFolders)
-                .then( () => {
-                    return db
-                        .into('notes')
-                        .insert(testNotes);
+  });
+ 
+  describe(`DELETE /api/notes/:noteid`, () => {
+          context(`Given no notes`, () => {
+            it(`responds with 404`, () => {
+              const noteid = 123456;
+              return supertest(app)
+                .delete(`/api/notes/${noteid}`)
+                .expect(404, { error: { message: `Note doesn't exist` } });
             });
-        });
-  
-        // it('responds with 204 and removes the note', () => {
-        //   const idToRemove = 2;
-        //   const expectedNotes = testNotes.filter(note => note.noteid !== idToRemove);
-        //   return supertest(app)
-        //     .delete(`/api/notes/${idToRemove}`)
-        //     .expect(204)
-        //     .then(res =>
-        //       supertest(app)
-        //         .get(`/api/notes`)
-        //         .expect(expectedNotes)
-        //     );
-        // });
-      });
-    }); //end of delete
+          });
+      
+          context('Given there are notes in the database', () => {
+            const testFolders = makeFoldersArray();
+            const testNotes = makeNotesArray();
+      
+            beforeEach('insert folders and notes', () => {
+                return db
+                    .into('folders')
+                    .insert(testFolders)
+                    .then( () => {
+                        return db
+                            .into('notes')
+                            .insert(testNotes);
+                });
+            });
+      
+            it('responds with 204 and removes the note', () => {
+              const idToRemove = 2;
+              const expectedNotes = testNotes.filter(note => note.noteid !== idToRemove);
+              return supertest(app)
+                .delete(`/api/notes/${idToRemove}`)
+                .expect(204)
+                .then( () =>
+                  supertest(app)
+                    .get(`/api/notes`)
+                    .expect(expectedNotes)
+                );
+            });
+          });
+  }); 
 
-    //PATCH
-    describe(`PATCH /api/notes/:noteid`, () => {
+  
+  describe(`PATCH /api/notes/:noteid`, () => {
       context(`Given no notes`, () => {
         it(`responds with 404`, () => {
           const noteid = 123456;
@@ -340,7 +340,6 @@ describe('Notes Endpoints', function() {
         //         .get(`/api/notes/${idToUpdate}`)
         //         .expect(expectedNote)
         //     )
-        // })
-      });
-    });//end of PATCH
+        });
+  });
 });
